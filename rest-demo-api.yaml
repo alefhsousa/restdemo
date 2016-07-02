@@ -1,0 +1,228 @@
+swagger: '2.0'
+info:
+  title: Rest Demo Api
+  description: Aplicação desenvolvida atentendo as solicitações que foram enviadas
+  version: 1.0.0
+
+  
+host: localhost:8080
+basePath: /rest/v1
+
+schemes:
+  - http
+  
+definitions:
+  Cep:
+    type: object
+    properties:
+      cep:
+        type: string
+        description: Cep que deseja consultar.
+      logradouro:
+        type: string
+        description: Rua que o cep identifica.
+      cidade:
+        type: string
+        description: Cidade que o cep identifica.
+      bairro:
+        type: string
+        description: Bairro que o cep identifica.
+      estado:
+        type: string
+        description: Estado que o cep identifica
+  Erro:
+    type: object
+    properties:
+      message:
+        type: string
+      category:
+        type: string
+  Endereco:
+    type: object
+    properties:
+      numero:
+        type: integer
+        format: int16
+        description: Id do endereco
+      complemento:
+        type: string
+        description: Complemento do endereço, tipo={casa, ap}
+      rua:
+        type: string
+        description: Rua do endereço
+      cep:
+        type: string
+        description: Cep do endereço
+      cidade:
+        type: string
+        description: Cidade do endereço
+      estado:
+        type: string
+        description: Estado do endereço
+      bairro:
+        type: string
+        description: Bairro do endereço
+  Stream:
+    type: object
+    properties:
+      texto:
+        type: string
+paths:
+  /cep/consulta:
+    post:
+      summary: Consulta cep
+      description: O Cep é um endpoint que consulta o cep e retorna as informações de endereço que ele identifica. O serviço utilizado é o  [API](http://api.postmon.com.br/v1/cep/).
+        Caso não seja encontrado o cep de primeira, é realizado uma formatação no CEP acrestando 0 da esquerda para direita, até que seja encontrado um cep válido. Exemplo 03377666 é inválido com isso ele irá tentar 03377660, 03377600 e assim por diante.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      tags:
+        - Cep
+      parameters:
+        - in: body
+          name: cep
+          description: Objeto json para efetuar a consulta do cep, apenas o campo CEP é obrigatório
+          required: true
+          schema:
+            $ref: '#/definitions/Cep'
+      responses:
+        '200':
+          description: Retorna um cep com as informações que ele identifica
+          schema:
+            $ref: '#/definitions/Cep'
+        400:
+          description: CEP digitado não foi encontrado
+          schema:
+            $ref: "#/definitions/Erro"
+        
+  /endereco/consulta:
+    post:
+      summary: Consulta endereço
+      description:  Recebe um objeto json do tipo Endereço e consulta no banco de dados, parâmetro ID obrigatório
+      tags:
+        - Endereço
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: endereco
+          required: true
+          description: Objeto json do tipo Endereço. Campo ID é obrigatório
+          schema:
+            $ref: "#/definitions/Endereco"
+      responses:
+        '200':
+          description: Endereço encontrado
+          schema:
+            $ref: '#/definitions/Endereco'
+        400:
+          description: Campos Obrigatórios não foram preenchidos ou Endereço enviado não existe no banco de dados
+          schema:
+            $ref: "#/definitions/Erro"
+  /endereco/cria:
+    post:
+      summary: Cria um endereço
+      description:  Recebe um objeto json do tipo Endereço e insere no banco de dados
+      tags:
+        - Endereço
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: endereco
+          required: true
+          description: Objeto json do tipo Endereço.
+          schema:
+            $ref: "#/definitions/Endereco"
+      responses:
+        '201':
+          description: Endereço cadastrado com sucesso
+          schema:
+            $ref: '#/definitions/Endereco'
+          headers:
+            Location:
+              description: uri do novo endereço cadastrado
+              type: string
+        400:
+          description: Campos Obrigatórios não foram preenchidos 
+          schema:
+            $ref: "#/definitions/Erro"
+
+  /endereco/atualiza:
+    put:
+      summary: Atualiza um endereço
+      description: Atualiza um endereço existente no banco de dados
+      tags:
+        - Endereço
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: endereco
+          required: true
+          description: Objeto json do tipo Endereço, campo ID é obrigatório
+          schema:
+            $ref: "#/definitions/Endereco"
+      responses:
+        '200':
+          description: 'Endereco atualizado com sucesso'
+          schema:
+            $ref: "#/definitions/Endereco"
+        400:
+          description: Campos Obrigatórios não foram preeenchidos ou uma tentativa de atualizar um endereço inexistente
+          schema:
+            $ref: "#/definitions/Erro"
+        
+  /endereco/exclui:
+    delete:
+      summary: Exclui um endereço
+      description: Realiza a busca pelo endereço enviado, caso exista no banco de dados efetua a exclusão
+      tags:
+        - Endereço
+      consumes:
+        - application/json
+      
+      parameters:
+        - in: body
+          name: endereco
+          required: true
+          description: Objeto json do tipo Endereço, campo ID é obrigatório
+          schema:
+            $ref: "#/definitions/Endereco"
+      responses:
+        '200':
+          description: 'Endereço excluído com sucesso'
+        400:
+          description: Endereço sem ID ou endereçõ não cadastrado no banco de dados
+          schema:
+            $ref: "#/definitions/Erro"
+  /analisadorStream/analisa:
+    post:
+      summary: Analisador de Stream 
+      description: Dado um stream qualquer será analisado para encontrar o primeiro caractere que não se repete
+      tags:
+        - Stream
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "Retorna o primeiro caractere que não foi repetido."
+          schema:
+            $ref: "#/definitions/Stream"
+        400:
+          description: " todos os caracteres se repetem "
+          schema:
+            $ref: "#/definitions/Erro"
+        
+    
+        
+    

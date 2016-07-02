@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="default">
+      <!--  <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>-->
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <class>br.com.alefh.restdemo.model.Cep</class>
+        <!--<class>br.com.alefh.restendereco.model.Endereco</class>-->
+      <!--  <properties>
+
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/crudEndereco"/>
+            <property name="javax.persistence.jdbc.usuario" value="crudEndereco"/>
+            <property name="javax.persistence.jdbc.password" value="root"/>
+
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+
+        </properties>-->
+
+
+        <properties>
+
+            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost/crudEndereco" />
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
+            <property name="hibernate.connection.username" value="crudEndereco" />
+            <property name="hibernate.connection.password" value="root" />
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect" />
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+        </properties>
+
+    </persistence-unit>
+
+</persistence>
