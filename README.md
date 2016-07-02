@@ -19,6 +19,6 @@ com outras aplicações que já ta em produção.
 
 # Documentação da Api
 
-- Pode ser acessada aqui: [Documentação API](https://github.com/OAI/OpenAPI-Specification)
+- Pode ser acessada aqui: [Documentação API](http://editor.swagger.io/#/?import=https:%2F%2Fraw.githubusercontent.com%2Falefhsousa%2Frestdemo%2Fmaster%2Frest-demo-api.yaml)
 
 

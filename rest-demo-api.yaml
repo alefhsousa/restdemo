@@ -203,7 +203,7 @@ paths:
           description: Endereço sem ID ou endereçõ não cadastrado no banco de dados
           schema:
             $ref: "#/definitions/Erro"
-  /analisadorStream/analisa:
+  /stream/procuraPrimeiroCaractereNaoRepetido:
     post:
       summary: Analisador de Stream 
       description: Dado um stream qualquer será analisado para encontrar o primeiro caractere que não se repete
