@@ -6,7 +6,7 @@ info:
 
   
 host: localhost:8080
-basePath: /rest/v1
+basePath: /rest/
 
 schemes:
   - http
